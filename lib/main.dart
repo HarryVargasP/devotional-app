@@ -1,69 +1,50 @@
-import 'dart:async';
-import 'dart:convert';
-
+import 'package:devotionalApp/widgets/navBar.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+void main() => runApp(MyApp());
 
-void main() => runApp(new MaterialApp(
-  home: new HomePage(),
-));
-
-class HomePage extends StatefulWidget {
-  @override
-  HomePageState createState () => new HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
-
-  final String api_url = "https://arcane-scrubland-99024.herokuapp.com/api/devotional/";
-  List data;
-
-  @override
-  void initState () {
-    super.initState();
-    this.getJsonData();
-  }
-
-  Future <String> getJsonData () async {
-    var response = await http.get(
-      Uri.encodeFull(api_url),
-      headers: {"accept":"application/json"}
-    );
-
-    setState(() {
-      var convertDataToJson = jsonDecode(response.body);
-      data = convertDataToJson['devotionals'];
-    }); 
-
-    return "Success";
-  }
+// #docregion MyApp
+class MyApp extends StatelessWidget {
+  final appTitle = 'Devoción Matutina';
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Retrieve JSON via HTTP"),
-      ),
-      body: new ListView.builder(
-        itemCount: data == null ? 0 : data.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new Container(
-            child: new Center(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  new Card(
-                    child: new Container(
-                      child: new Text(data[index]['title']),
-                      padding: const EdgeInsets.all(20), 
-                    ),
-                    )
-                ],
-              )
-            ,)
-          );
-        },
-      ),
+    return MaterialApp(
+      title: appTitle,
+      home: MyHomePage(title: appTitle),
+      theme: ThemeData(fontFamily: 'CantoraOne',),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  final String title;
+
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          title, 
+          style: TextStyle(
+            fontFamily: 'CantoraOne',
+            fontSize: 23.0
+            ),
+            ),
+        backgroundColor: Colors.green,
+        toolbarHeight: MediaQuery.of(context).size.height / 10.0,
+        ),
+      body: Center(
+        child: Text(
+          'Text center',
+          style: TextStyle(
+            fontFamily: 'CantoraOne',
+            fontSize: 60.0), 
+            )
+        ),
+      //drawer: MenuLateral(),
+      bottomNavigationBar: NavBar()
     );
   }
 }
